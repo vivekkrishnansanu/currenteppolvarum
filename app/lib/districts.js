@@ -1,0 +1,16 @@
+export const DISTRICTS = [
+  { code: 'TVM', name: 'Thiruvananthapuram', ml: 'തിരുവനന്തപുരം', ksebKeywords: ['thiruvananthapuram', 'trivandrum', 'tvm'] },
+  { code: 'KLM', name: 'Kollam',             ml: 'കൊല്ലം',         ksebKeywords: ['kollam', 'quilon'] },
+  { code: 'PTA', name: 'Pathanamthitta',     ml: 'പത്തനംതിട്ട',    ksebKeywords: ['pathanamthitta', 'pandalam'] },
+  { code: 'ALP', name: 'Alappuzha',          ml: 'ആലപ്പുഴ',        ksebKeywords: ['alappuzha', 'alleppey', 'alp'] },
+  { code: 'KTM', name: 'Kottayam',           ml: 'കോട്ടയം',        ksebKeywords: ['kottayam'] },
+  { code: 'IDK', name: 'Idukki',             ml: 'ഇടുക്കി',        ksebKeywords: ['idukki', 'thodupuzha'] },
+  { code: 'EKM', name: 'Ernakulam',          ml: 'എറണാകുളം',       ksebKeywords: ['ernakulam', 'kochi', 'cochin', 'ekm'] },
+  { code: 'TCR', name: 'Thrissur',           ml: 'തൃശ്ശൂർ',         ksebKeywords: ['thrissur', 'trichur', 'tcr'] },
+  { code: 'PKD', name: 'Palakkad',           ml: 'പാലക്കാട്',       ksebKeywords: ['palakkad', 'palghat'] },
+  { code: 'MLP', name: 'Malappuram',         ml: 'മലപ്പുറം',        ksebKeywords: ['malappuram'] },
+  { code: 'KZD', name: 'Kozhikode',          ml: 'കോഴിക്കോട്',      ksebKeywords: ['kozhikode', 'calicut'] },
+  { code: 'WYD', name: 'Wayanad',            ml: 'വയനാട്',          ksebKeywords: ['wayanad', 'kalpetta'] },
+  { code: 'KNR', name: 'Kannur',             ml: 'കണ്ണൂർ',          ksebKeywords: ['kannur', 'cannanore'] },
+  { code: 'KGD', name: 'Kasaragod',          ml: 'കാസർഗോഡ്',        ksebKeywords: ['kasaragod', 'kasargod'] },
+]

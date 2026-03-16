@@ -1,0 +1,61 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #0a0a0a;
+  --bg2:      #111111;
+  --bg3:      #1a1a1a;
+  --bg4:      #222222;
+  --border:   #242424;
+  --border2:  #2e2e2e;
+  --text:     #f0f0ee;
+  --text2:    #888;
+  --text3:    #444;
+  --accent:   #f5a623;
+  --red:      #e24b4a;
+  --red-bg:   #1a0808;
+  --red-b:    #3a1010;
+  --amber:    #f5a623;
+  --amber-bg: #150f00;
+  --amber-b:  #2e2000;
+  --green:    #4caf6e;
+  --green-bg: #071410;
+  --green-b:  #123520;
+  --blue:     #5b9cf6;
+  --blue-bg:  #080f1a;
+  --blue-b:   #102040;
+  --font:     'DM Sans', sans-serif;
+  --font-ml:  'Noto Sans Malayalam', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+button { cursor: pointer; border: none; background: none; font-family: var(--font); }
+input  { font-family: var(--font); }
+a      { color: var(--text2); text-decoration: none; }
+a:hover { color: var(--text); }
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}

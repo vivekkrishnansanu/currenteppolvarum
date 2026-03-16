@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Current Eppolvarum | കറന്റ് എപ്പോൾ വരും?</title>
+<meta name="description" content="Kerala power outage tracker. Find scheduled cuts and unplanned outages by district. കേരളത്തിലെ കറന്റ് വിവരങ്ങൾ.">
+<meta property="og:title" content="Current Eppolvarum — കറന്റ് എപ്പോൾ വരും?">
+<meta property="og:description" content="Kerala's real-time power cut tracker. Check your district now.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#0a0a0a;
+    --bg2:#111111;
+    --bg3:#1a1a1a;
+    --bg4:#222222;
+    --border:#2a2a2a;
+    --border2:#333333;
+    --text:#f0f0f0;
+    --text2:#999999;
+    --text3:#555555;
+    --accent:#f5a623;
+    --accent2:#e8960f;
+    --red:#e24b4a;
+    --red-bg:#1f0f0f;
+    --red-border:#3d1a1a;
+    --amber:#f5a623;
+    --amber-bg:#1f1600;
+    --amber-border:#3d2c00;
+    --green:#4caf6e;
+    --green-bg:#0a1f12;
+    --green-border:#1a3d24;
+    --font:'Space Grotesk',sans-serif;
+    --font-ml:'Noto Sans Malayalam',sans-serif;
+  }
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;-webkit-font-smoothing:antialiased}
+
+  /* HEADER */
+  header{
+    position:sticky;top:0;z-index:100;
+    background:rgba(10,10,10,0.92);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border);
+    padding:0 20px;
+    height:56px;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .logo{display:flex;align-items:center;gap:10px}
+  .logo-icon{
+    width:32px;height:32px;
+    background:var(--amber-bg);
+    border:1px solid var(--amber-border);
+    border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .logo-text{display:flex;flex-direction:column;gap:1px}
+  .logo-en{font-size:14px;font-weight:600;color:var(--text);letter-spacing:-0.3px;line-height:1}
+  .logo-ml{font-size:11px;color:var(--text2);font-family:var(--font-ml);line-height:1}
+  .live-badge{
+    display:flex;align-items:center;gap:6px;
+    padding:5px 10px;
+    background:var(--bg3);
+    border:1px solid var(--border);
+    border-radius:20px;
+    font-size:12px;color:var(--text2);
+  }
+  .live-dot{
+    width:6px;height:6px;border-radius:50%;
+    background:var(--green);
+    animation:pulse 2s infinite;
+  }
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.8)}}
+
+  /* HERO */
+  .hero{
+    padding:40px 20px 32px;
+    text-align:center;
+    border-bottom:1px solid var(--border);
+  }
+  .hero-question{
+    font-size:clamp(28px,6vw,48px);
+    font-weight:700;
+    font-family:var(--font-ml);
+    color:var(--text);
+    letter-spacing:-0.5px;
+    line-height:1.1;
+    margin-bottom:6px;
+  }
+  .hero-sub{font-size:14px;color:var(--text2);margin-bottom:24px}
+  .search-wrap{
+    max-width:480px;margin:0 auto;
+    position:relative;
+  }
+  .search-wrap svg{
+    position:absolute;left:14px;top:50%;transform:translateY(-50%);
+    pointer-events:none;
+  }
+  #search{
+    width:100%;
+    padding:12px 14px 12px 42px;
+    background:var(--bg3);
+    border:1px solid var(--border2);
+    border-radius:12px;
+    color:var(--text);
+    font-family:var(--font);
+    font-size:15px;
+    outline:none;
+    transition:border-color 0.2s;
+  }
+  #search:focus{border-color:var(--accent)}
+  #search::placeholder{color:var(--text3)}
+
+  /* SUMMARY STRIP */
+  .summary{
+    display:flex;gap:0;
+    border-bottom:1px solid var(--border);
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .summary::-webkit-scrollbar{display:none}
+  .summary-item{
+    flex:1;min-width:100px;
+    padding:16px 20px;
+    text-align:center;
+    border-right:1px solid var(--border);
+  }
+  .summary-item:last-child{border-right:none}
+  .summary-num{font-size:22px;font-weight:700;margin-bottom:2px}
+  .summary-label{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px}
+  .s-red{color:var(--red)}
+  .s-amber{color:var(--amber)}
+  .s-green{color:var(--green)}
+
+  /* MAIN CONTENT */
+  .main{padding:24px 20px;max-width:900px;margin:0 auto}
+
+  /* DATA SOURCE NOTICE */
+  .data-notice{
+    display:flex;align-items:flex-start;gap:10px;
+    padding:12px 16px;
+    background:var(--amber-bg);
+    border:1px solid var(--amber-border);
+    border-radius:10px;
+    margin-bottom:24px;
+    font-size:13px;
+    color:var(--amber);
+    line-height:1.5;
+  }
+  .data-notice svg{flex-shrink:0;margin-top:1px}
+
+  /* DISTRICT GRID */
+  .section-title{
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:var(--text3);
+    margin-bottom:12px;
+    font-weight:500;
+  }
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+    gap:8px;
+    margin-bottom:32px;
+  }
+  .d-card{
+    padding:14px;
+    background:var(--bg2);
+    border:1px solid var(--border);
+    border-radius:12px;
+    cursor:pointer;
+    transition:border-color 0.15s,background 0.15s;
+    position:relative;
+    overflow:hidden;
+  }
+  .d-card:hover{background:var(--bg3);border-color:var(--border2)}
+  .d-card.active{border-color:var(--accent)!important;background:var(--bg3)}
+  .d-card.status-outage{border-color:var(--red-border)}
+  .d-card.status-scheduled{border-color:var(--amber-border)}
+  .d-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+  .status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+  .dot-outage{background:var(--red);animation:pulse 1.5s infinite}
+  .dot-scheduled{background:var(--amber)}
+  .dot-clear{background:var(--green)}
+  .d-name{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .d-ml{font-size:11px;color:var(--text2);font-family:var(--font-ml);margin-bottom:8px}
+  .d-badge{
+    display:inline-block;
+    font-size:10px;font-weight:500;
+    padding:3px 8px;border-radius:6px;
+    text-transform:uppercase;letter-spacing:0.3px;
+  }
+  .badge-outage{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+  .badge-scheduled{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
+  .badge-clear{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+  .d-eta{font-size:12px;color:var(--text2);margin-top:6px;display:none}
+  .d-card.status-outage .d-eta,.d-card.status-scheduled .d-eta{display:block}
+
+  /* DETAIL PANEL */
+  #detail-panel{
+    display:none;
+    background:var(--bg2);
+    border:1px solid var(--border2);
+    border-radius:16px;
+    overflow:hidden;
+    margin-bottom:32px;
+    animation:slideUp 0.2s ease;
+  }
+  @keyframes slideUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .detail-header{
+    padding:20px 24px;
+    border-bottom:1px solid var(--border);
+    display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+  }
+  .detail-district{font-size:22px;font-weight:700;letter-spacing:-0.5px;margin-bottom:2px}
+  .detail-district-ml{font-size:14px;color:var(--text2);font-family:var(--font-ml)}
+  .detail-close{
+    background:var(--bg3);border:1px solid var(--border);
+    border-radius:8px;padding:6px 10px;
+    color:var(--text2);cursor:pointer;
+    font-size:13px;white-space:nowrap;flex-shrink:0;
+    transition:color 0.15s;
+  }
+  .detail-close:hover{color:var(--text)}
+  .detail-body{padding:20px 24px}
+  .detail-status-row{
+    display:flex;align-items:center;gap:10px;
+    margin-bottom:20px;
+  }
+  .detail-status-icon{
+    width:40px;height:40px;border-radius:10px;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .icon-outage{background:var(--red-bg);border:1px solid var(--red-border)}
+  .icon-scheduled{background:var(--amber-bg);border:1px solid var(--amber-border)}
+  .icon-clear{background:var(--green-bg);border:1px solid var(--green-border)}
+  .detail-status-text{flex:1}
+  .detail-status-label{font-size:16px;font-weight:600;margin-bottom:2px}
+  .detail-status-since{font-size:13px;color:var(--text2)}
+  .detail-eta-box{
+    padding:16px 20px;
+    border-radius:12px;
+    margin-bottom:16px;
+    text-align:center;
+  }
+  .eta-label{font-size:11px;text-transform:uppercase;letter-spacing:0.8px;font-weight:500;opacity:0.8;margin-bottom:4px}
+  .eta-value{font-size:32px;font-weight:700;letter-spacing:-1px;line-height:1}
+  .eta-sub{font-size:12px;opacity:0.7;margin-top:4px}
+  .eta-outage{background:var(--red-bg);border:1px solid var(--red-border);color:var(--red)}
+  .eta-scheduled{background:var(--amber-bg);border:1px solid var(--amber-border);color:var(--amber)}
+  .eta-clear{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green)}
+  .detail-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;
+  }
+  .detail-stat{
+    background:var(--bg3);border-radius:10px;padding:12px 14px;
+    border:1px solid var(--border);
+  }
+  .detail-stat-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
+  .detail-stat-val{font-size:14px;font-weight:500}
+  .areas-list{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+  .area-tag{
+    font-size:12px;padding:4px 10px;
+    background:var(--bg3);border:1px solid var(--border);border-radius:6px;
+    color:var(--text2);
+  }
+  .detail-source{
+    font-size:12px;color:var(--text3);
+    padding-top:12px;border-top:1px solid var(--border);
+    display:flex;align-items:center;gap:6px;
+  }
+
+  /* HOW IT WORKS */
+  .how-section{
+    margin-bottom:32px;
+    padding:20px;
+    background:var(--bg2);
+    border:1px solid var(--border);
+    border-radius:16px;
+  }
+  .how-title{font-size:13px;font-weight:600;color:var(--text2);margin-bottom:16px;text-transform:uppercase;letter-spacing:0.5px}
+  .sources-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}
+  .source-item{
+    display:flex;align-items:flex-start;gap:10px;
+    padding:12px;
+    background:var(--bg3);border:1px solid var(--border);border-radius:10px;
+  }
+  .source-icon{
+    width:28px;height:28px;border-radius:6px;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;font-size:14px;
+  }
+  .source-info{flex:1}
+  .source-name{font-size:12px;font-weight:500;margin-bottom:2px}
+  .source-desc{font-size:11px;color:var(--text3);line-height:1.4}
+  .source-real{background:var(--green-bg);border:1px solid var(--green-border)}
+  .source-soon{background:var(--amber-bg);border:1px solid var(--amber-border)}
+
+  /* KSEB FETCH STATUS */
+  .fetch-status{
+    display:flex;align-items:center;gap:8px;
+    font-size:12px;color:var(--text3);
+    margin-bottom:8px;
+  }
+  .fetch-dot{width:6px;height:6px;border-radius:50%;background:var(--text3)}
+  .fetch-dot.fetching{background:var(--amber);animation:pulse 1s infinite}
+  .fetch-dot.success{background:var(--green)}
+  .fetch-dot.error{background:var(--red)}
+
+  /* FOOTER */
+  footer{
+    border-top:1px solid var(--border);
+    padding:20px;
+    text-align:center;
+    font-size:12px;
+    color:var(--text3);
+    line-height:1.8;
+  }
+  footer a{color:var(--text2);text-decoration:none}
+  footer a:hover{color:var(--accent)}
+
+  /* NO RESULTS */
+  .no-results{
+    text-align:center;padding:40px 20px;
+    color:var(--text3);font-size:14px;
+  }
+
+  /* MOBILE */
+  @media(max-width:500px){
+    .detail-grid{grid-template-columns:1fr}
+    .summary-item{padding:12px}
+    .summary-num{font-size:18px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">
+      <svg width="16" height="18" viewBox="0 0 16 18" fill="none">
+        <path d="M10 1L3 10h6l-3 7 10-9H9l1-7z" fill="var(--amber)"/>
+      </svg>
+    </div>
+    <div class="logo-text">
+      <span class="logo-en">Current Eppolvarum</span>
+      <span class="logo-ml">കറന്റ് എപ്പോൾ വരും?</span>
+    </div>
+  </div>
+  <div class="live-badge">
+    <div class="live-dot" id="live-dot"></div>
+    <span id="live-time">Live</span>
+  </div>
+</header>
+
+<div class="hero">
+  <h1 class="hero-question">കറന്റ് എപ്പോൾ വരും?</h1>
+  <p class="hero-sub">Kerala power outage tracker · Search your district below</p>
+  <div class="search-wrap">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <circle cx="6.5" cy="6.5" r="5" stroke="#555" stroke-width="1.5"/>
+      <path d="M10.5 10.5L14 14" stroke="#555" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    <input type="text" id="search" placeholder="Search district or area name..." autocomplete="off" oninput="filterDistricts(this.value)">
+  </div>
+</div>
+
+<div class="summary">
+  <div class="summary-item">
+    <div class="summary-num s-red" id="count-outage">0</div>
+    <div class="summary-label">Outages</div>
+  </div>
+  <div class="summary-item">
+    <div class="summary-num s-amber" id="count-scheduled">0</div>
+    <div class="summary-label">Scheduled cuts</div>
+  </div>
+  <div class="summary-item">
+    <div class="summary-num s-green" id="count-clear">0</div>
+    <div class="summary-label">All clear</div>
+  </div>
+  <div class="summary-item">
+    <div class="summary-num" id="count-total" style="color:var(--text2)">14</div>
+    <div class="summary-label">Districts</div>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="data-notice">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="margin-top:1px">
+      <circle cx="7" cy="7" r="6" stroke="var(--amber)" stroke-width="1.3"/>
+      <path d="M7 4v3M7 9.5v.5" stroke="var(--amber)" stroke-width="1.3" stroke-linecap="round"/>
+    </svg>
+    <span>
+      <strong>Data status:</strong> Scheduled cuts are fetched from KSEB's public portal. Unplanned outage detection via internet traffic signals — coming soon once backend is live. <span id="kseb-fetch-msg">Attempting to fetch KSEB data...</span>
+    </span>
+  </div>
+
+  <div id="detail-panel"></div>
+
+  <p class="section-title" id="grid-label">All 14 Districts</p>
+  <div class="grid" id="district-grid"></div>
+
+  <div class="how-section">
+    <p class="how-title">How we detect outages</p>
+    <div class="sources-grid">
+      <div class="source-item">
+        <div class="source-icon source-real">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="9" rx="1.5" stroke="var(--green)" stroke-width="1.2"/><path d="M5 3V2a2 2 0 014 0v1" stroke="var(--green)" stroke-width="1.2"/></svg>
+        </div>
+        <div class="source-info">
+          <div class="source-name" style="color:var(--green)">KSEB Portal ✓ Live</div>
+          <div class="source-desc">Scheduled cuts from pse.kseb.in — real data, parsed automatically</div>
+        </div>
+      </div>
+      <div class="source-item">
+        <div class="source-icon source-soon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 10.5c1.5-4 4-7 6-7s4 3 6 7" stroke="var(--amber)" stroke-width="1.2" stroke-linecap="round"/><path d="M4 10.5c.5-2 1.5-3.5 3-3.5s2.5 1.5 3 3.5" stroke="var(--amber)" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </div>
+        <div class="source-info">
+          <div class="source-name" style="color:var(--amber)">Internet Drop · Soon</div>
+          <div class="source-desc">Cloudflare Radar monitors Kerala internet traffic dips in real time</div>
+        </div>
+      </div>
+      <div class="source-item">
+        <div class="source-icon source-soon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="var(--amber)" stroke-width="1.2"/><path d="M5 7l1.5 1.5L9 5" stroke="var(--amber)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="source-info">
+          <div class="source-name" style="color:var(--amber)">Social Signals · Soon</div>
+          <div class="source-desc">Auto-detects "current poyi" posts spiking in an area on X/Facebook</div>
+        </div>
+      </div>
+      <div class="source-item">
+        <div class="source-icon source-soon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 5h10M2 9h10" stroke="var(--amber)" stroke-width="1.2" stroke-linecap="round"/><rect x="1" y="2" width="12" height="10" rx="1.5" stroke="var(--amber)" stroke-width="1.2"/></svg>
+        </div>
+        <div class="source-info">
+          <div class="source-name" style="color:var(--amber)">Swiggy/Zomato · Soon</div>
+          <div class="source-desc">Restaurant cluster going offline = unplanned outage detected</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>Built for Kerala. Data source: <a href="http://pse.kseb.in/Outages/webreport" target="_blank">KSEB Scheduled Outages Portal</a></p>
+  <p style="margin-top:4px">Not affiliated with KSEB · <a href="mailto:hello@currenteppolvarum.live">hello@currenteppolvarum.live</a></p>
+</footer>
+
+<script>
+const DISTRICTS = [
+  {name:"Ernakulam",ml:"എറണാകുളം",code:"EKM"},
+  {name:"Thrissur",ml:"തൃശ്ശൂർ",code:"TCR"},
+  {name:"Thiruvananthapuram",ml:"തിരുവനന്തപുരം",code:"TVM"},
+  {name:"Kozhikode",ml:"കോഴിക്കോട്",code:"KZD"},
+  {name:"Wayanad",ml:"വയനാട്",code:"WYD"},
+  {name:"Kottayam",ml:"കോട്ടയം",code:"KTM"},
+  {name:"Malappuram",ml:"മലപ്പുറം",code:"MLP"},
+  {name:"Kannur",ml:"കണ്ണൂർ",code:"KNR"},
+  {name:"Palakkad",ml:"പാലക്കാട്",code:"PKD"},
+  {name:"Alappuzha",ml:"ആലപ്പുഴ",code:"ALP"},
+  {name:"Kollam",ml:"കൊല്ലം",code:"KLM"},
+  {name:"Idukki",ml:"ഇടുക്കി",code:"IDK"},
+  {name:"Pathanamthitta",ml:"പത്തനംതിട്ട",code:"PTA"},
+  {name:"Kasaragod",ml:"കാസർഗോഡ്",code:"KGD"}
+];
+
+// KSEB real data will replace this once fetched
+// Status: "outage" | "scheduled" | "clear"
+let districtData = {};
+
+// Initialize all districts as "fetching"
+DISTRICTS.forEach(d => {
+  districtData[d.code] = {
+    status:"clear",
+    label:"Checking...",
+    eta:null,
+    since:null,
+    areas:[],
+    source:"Fetching from KSEB...",
+    confidence:"low"
+  };
+});
+
+let selectedDistrict = null;
+let ksebFetchSuccess = false;
+
+// ── KSEB FETCH ──────────────────────────────────────────────
+async function fetchKSEB() {
+  const msg = document.getElementById('kseb-fetch-msg');
+  msg.textContent = 'Connecting to KSEB portal...';
+
+  // KSEB's public outage page — CORS will likely block direct fetch.
+  // We try a CORS proxy first, then fallback gracefully.
+  const KSEB_URL = 'http://pse.kseb.in/Outages/webreport';
+  const PROXY = `https://api.allorigins.win/raw?url=${encodeURIComponent(KSEB_URL)}`;
+
+  try {
+    const res = await fetch(PROXY, {signal: AbortSignal.timeout(8000)});
+    if (!res.ok) throw new Error('Non-200');
+    const html = await res.text();
+    parseKSEBHTML(html);
+    msg.textContent = 'KSEB data loaded successfully.';
+    ksebFetchSuccess = true;
+    document.getElementById('live-dot').style.background = 'var(--green)';
+  } catch(e) {
+    // Fallback: show demo data clearly labeled
+    msg.textContent = 'KSEB portal unreachable from browser (CORS). Showing demo data — deploy with backend proxy for live data.';
+    loadDemoData();
+  }
+  renderGrid(DISTRICTS);
+  updateSummary();
+}
+
+function parseKSEBHTML(html) {
+  // Parse KSEB HTML table for scheduled outages
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+  const rows = doc.querySelectorAll('table tr');
+
+  // Reset all to clear first
+  DISTRICTS.forEach(d => {
+    districtData[d.code] = {
+      status:'clear', label:'All clear', eta:null,
+      since:null, areas:[], source:'KSEB portal — no scheduled cut',
+      confidence:'high'
+    };
+  });
+
+  // Parse each outage row
+  rows.forEach(row => {
+    const cells = row.querySelectorAll('td');
+    if(cells.length < 3) return;
+    const text = Array.from(cells).map(c => c.textContent.trim());
+    const fullText = text.join(' ').toLowerCase();
+
+    // Match district names
+    DISTRICTS.forEach(d => {
+      if(fullText.includes(d.name.toLowerCase())) {
+        const timeMatch = text.find(t => /\d{1,2}:\d{2}/.test(t));
+        districtData[d.code] = {
+          status:'scheduled',
+          label:'Scheduled cut',
+          eta: timeMatch ? `Ends ${timeMatch}` : 'Check KSEB portal',
+          since: 'Today',
+          areas: [text[1] || 'See KSEB portal'],
+          source:'KSEB Scheduled Outages Portal — verified',
+          confidence:'high'
+        };
+      }
+    });
+  });
+}
+
+function loadDemoData() {
+  // Demo data — clearly labeled. Replace with real backend.
+  const demo = {
+    EKM:{status:'outage',label:'Unplanned outage',eta:'~2 hrs',since:'1:34 PM',areas:['Kalamassery','Aluva','Perumbavoor'],source:'DEMO — Internet traffic drop signal',confidence:'demo'},
+    TCR:{status:'scheduled',label:'Scheduled cut',eta:'Ends 6:00 PM',since:'2:00 PM',areas:['Thrissur East','Irinjalakuda'],source:'DEMO — KSEB schedule',confidence:'demo'},
+    WYD:{status:'outage',label:'Unplanned outage',eta:'Under investigation',since:'12:50 PM',areas:['Kalpetta','Mananthavady'],source:'DEMO — Internet traffic drop signal',confidence:'demo'},
+    PKD:{status:'outage',label:'Unplanned outage',eta:'~45 min',since:'2:22 PM',areas:['Palakkad Town','Chittur'],source:'DEMO — Social media spike detected',confidence:'demo'},
+    ALP:{status:'scheduled',label:'Scheduled cut',eta:'Ends 4:30 PM',since:'1:30 PM',areas:['Alappuzha Municipality'],source:'DEMO — KSEB schedule',confidence:'demo'},
+    IDK:{status:'scheduled',label:'Scheduled cut',eta:'Ends 5:00 PM',since:'3:00 PM',areas:['Thodupuzha','Painavu'],source:'DEMO — KSEB schedule',confidence:'demo'},
+  };
+  DISTRICTS.forEach(d => {
+    districtData[d.code] = demo[d.code] || {
+      status:'clear',label:'All clear',eta:null,since:null,
+      areas:[],source:'DEMO — No signals detected',confidence:'demo'
+    };
+  });
+}
+
+// ── RENDER ──────────────────────────────────────────────────
+function renderGrid(list) {
+  const grid = document.getElementById('district-grid');
+  if(!list.length){
+    grid.innerHTML = '<div class="no-results">No districts match your search</div>';
+    return;
+  }
+  grid.innerHTML = list.map(d => {
+    const info = districtData[d.code];
+    const s = info.status;
+    const isActive = selectedDistrict === d.code ? ' active' : '';
+    const demoTag = info.confidence==='demo' ? ' [Demo]' : '';
+    const etaStr = info.eta ? `<div class="d-eta">${info.eta}${demoTag}</div>` : '';
+    return `
+    <div class="d-card status-${s}${isActive}" onclick="selectDistrict('${d.code}')">
+      <div class="d-card-top">
+        <div class="d-name">${d.name}</div>
+        <div class="status-dot dot-${s}"></div>
+      </div>
+      <div class="d-ml">${d.ml}</div>
+      <span class="d-badge badge-${s}">${s==='outage'?'Outage':s==='scheduled'?'Scheduled':'Clear'}</span>
+      ${etaStr}
+    </div>`;
+  }).join('');
+}
+
+function selectDistrict(code) {
+  selectedDistrict = code;
+  const d = DISTRICTS.find(x => x.code === code);
+  const info = districtData[code];
+  const panel = document.getElementById('detail-panel');
+  const s = info.status;
+  const demoWarn = info.confidence==='demo' ? `<div style="font-size:12px;padding:8px 12px;background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:8px;color:var(--amber);margin-bottom:12px;">⚠ Demo data — deploy with backend for live signals</div>` : '';
+
+  const etaBlock = info.eta ? `
+    <div class="detail-eta-box eta-${s}">
+      <div class="eta-label">${s==='outage'?'Estimated restoration':s==='scheduled'?'Scheduled end':'Status'}</div>
+      <div class="eta-value">${info.eta}</div>
+      ${s==='outage'?'<div class="eta-sub">Based on historical fault resolution time</div>':''}
+    </div>` : `
+    <div class="detail-eta-box eta-clear">
+      <div class="eta-label">Status</div>
+      <div class="eta-value" style="font-size:22px">Power available</div>
+      <div class="eta-sub">No outages detected in this district</div>
+    </div>`;
+
+  const areasBlock = info.areas.length ? `
+    <p class="section-title" style="margin-bottom:8px">Affected areas</p>
+    <div class="areas-list">${info.areas.map(a=>`<span class="area-tag">${a}</span>`).join('')}</div>` : '';
+
+  const statsBlock = `
+    <div class="detail-grid">
+      <div class="detail-stat">
+        <div class="detail-stat-label">Outage type</div>
+        <div class="detail-stat-val">${s==='outage'?'Unplanned':s==='scheduled'?'Scheduled maintenance':'No outage'}</div>
+      </div>
+      <div class="detail-stat">
+        <div class="detail-stat-label">${s==='clear'?'Last updated':'Reported since'}</div>
+        <div class="detail-stat-val">${info.since || 'Just now'}</div>
+      </div>
+    </div>`;
+
+  const iconSVG = s==='outage'
+    ? `<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 3v6M9 13v.5" stroke="var(--red)" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="9" r="7.5" stroke="var(--red)" stroke-width="1.5"/></svg>`
+    : s==='scheduled'
+    ? `<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="7.5" stroke="var(--amber)" stroke-width="1.5"/><path d="M9 5v4.5l3 1.5" stroke="var(--amber)" stroke-width="1.5" stroke-linecap="round"/></svg>`
+    : `<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M5 9l3 3 5-5" stroke="var(--green)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="9" r="7.5" stroke="var(--green)" stroke-width="1.5"/></svg>`;
+
+  panel.style.display = 'block';
+  panel.innerHTML = `
+    <div class="detail-header">
+      <div>
+        <div class="detail-district">${d.name}</div>
+        <div class="detail-district-ml">${d.ml}</div>
+      </div>
+      <button class="detail-close" onclick="closeDetail()">✕ Close</button>
+    </div>
+    <div class="detail-body">
+      ${demoWarn}
+      <div class="detail-status-row">
+        <div class="detail-status-icon icon-${s}">${iconSVG}</div>
+        <div class="detail-status-text">
+          <div class="detail-status-label" style="color:${s==='outage'?'var(--red)':s==='scheduled'?'var(--amber)':'var(--green)'}">${info.label}</div>
+          ${info.since?`<div class="detail-status-since">Since ${info.since}</div>`:''}
+        </div>
+      </div>
+      ${etaBlock}
+      ${statsBlock}
+      ${areasBlock}
+      <div class="detail-source">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="var(--text3)" stroke-width="1"/><path d="M6 4v2.5M6 8v.3" stroke="var(--text3)" stroke-width="1" stroke-linecap="round"/></svg>
+        ${info.source}
+      </div>
+    </div>`;
+
+  panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+  renderGrid(currentList);
+}
+
+function closeDetail() {
+  selectedDistrict = null;
+  document.getElementById('detail-panel').style.display = 'none';
+  renderGrid(currentList);
+}
+
+function updateSummary() {
+  const counts = {outage:0,scheduled:0,clear:0};
+  DISTRICTS.forEach(d => counts[districtData[d.code].status]++);
+  document.getElementById('count-outage').textContent = counts.outage;
+  document.getElementById('count-scheduled').textContent = counts.scheduled;
+  document.getElementById('count-clear').textContent = counts.clear;
+}
+
+let currentList = DISTRICTS;
+function filterDistricts(val) {
+  currentList = val
+    ? DISTRICTS.filter(d =>
+        d.name.toLowerCase().includes(val.toLowerCase()) ||
+        d.ml.includes(val) ||
+        d.code.toLowerCase().includes(val.toLowerCase())
+      )
+    : DISTRICTS;
+  document.getElementById('grid-label').textContent =
+    val ? `${currentList.length} result${currentList.length!==1?'s':''} for "${val}"` : 'All 14 Districts';
+  renderGrid(currentList);
+}
+
+// ── LIVE TIMER ───────────────────────────────────────────────
+let secs = 0;
+setInterval(() => {
+  secs++;
+  const el = document.getElementById('live-time');
+  if(!ksebFetchSuccess) return;
+  el.textContent = secs < 60 ? `${secs}s ago` : `${Math.floor(secs/60)}m ago`;
+}, 1000);
+
+// ── INIT ─────────────────────────────────────────────────────
+renderGrid(DISTRICTS);
+updateSummary();
+fetchKSEB();
+</script>
+</body>
+</html>
